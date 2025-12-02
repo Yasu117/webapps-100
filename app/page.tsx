@@ -6,7 +6,7 @@ export default function Home() {
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold">Webアプリ100本ノック</h1>
         <p className="text-xl text-gray-600">
-          Next.js + Tailwind CSS で作る、100個のミニアプリ挑戦記。
+          しみずやすたかの1ヶ月で100個のアプリ作成挑戦記。
         </p>
       </div>
 
