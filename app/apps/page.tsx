@@ -16,6 +16,34 @@ const apps = [
         description: "作業時間と休憩時間を設定して使えるシンプルなポモドーロタイマー。",
         tags: ["タイマー", "生産性"],
     },
+    {
+        id: "003",
+        slug: "003-tetris",
+        title: "テトリス（ミニ）",
+        description: "矢印キーで操作できるシンプルなテトリス風ゲーム。",
+        tags: ["ゲーム", "Canvas"],
+    },
+    {
+        id: "004",
+        slug: "004-breakout",
+        title: "ブロック崩し（ミニ）",
+        description: "ボールを跳ね返してブロックを消すクラシックなブロック崩し。",
+        tags: ["ゲーム", "Canvas"],
+    },
+    {
+        id: "005",
+        slug: "005-requirements-generator",
+        title: "要件定義ジェネレーター",
+        description: "1行のビジネスアイデアから、FE/BE/DB/非機能要件まで自動分解するAIアプリ。",
+        tags: ["AI", "要件定義"],
+    },
+    {
+        id: "006",
+        slug: "006-contract-risk-ai",
+        title: "契約書リスク抽出AI",
+        description: "契約書のテキスト入力またはPDF/Wordアップロードから、主なリスクと修正提案を洗い出すリーガルチェック補助AI。",
+        tags: ["AI", "契約書", "リーガル"],
+    },
     // ここに今後どんどん追加していく
 ];
 

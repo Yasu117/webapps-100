@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -21,6 +21,33 @@ export default function PomodoroTimerPage() {
         15 * 60
     );
 
+    const audioCtxRef = useRef<AudioContext | null>(null);
+
+    // 音を鳴らす関数
+    const playNotificationSound = () => {
+        const ctx = audioCtxRef.current;
+        if (!ctx) return;
+
+        const playTone = (startTime: number, freq: number, duration: number) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.1, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        };
+
+        const now = ctx.currentTime;
+        // ピッ、ピッ、ピッ と3回鳴らす
+        playTone(now, 880, 0.1);
+        playTone(now + 0.2, 880, 0.1);
+        playTone(now + 0.4, 880, 0.1);
+    };
+
     // タイマー本体（useEffect + setInterval）
     useEffect(() => {
         if (!isRunning) return;
@@ -30,9 +57,11 @@ export default function PomodoroTimerPage() {
                 if (prev <= 1) {
                     // 0 になったら作業↔休憩を自動で切り替え
                     if (mode === "work") {
+                        playNotificationSound(); // 作業終了時に音を鳴らす
                         setMode("break");
                         return breakMinutes * 60 || 0;
                     } else {
+                        playNotificationSound(); // 休憩終了時にも音を鳴らす
                         setMode("work");
                         return workMinutes * 60 || 0;
                     }
@@ -46,6 +75,15 @@ export default function PomodoroTimerPage() {
             window.clearInterval(intervalId);
         };
     }, [isRunning, mode, workMinutes, breakMinutes]);
+
+    // コンポーネントのアンマウント時にAudioContextをクローズ
+    useEffect(() => {
+        return () => {
+            if (audioCtxRef.current) {
+                audioCtxRef.current.close();
+            }
+        };
+    }, []);
 
     // 入力変更時：停止中なら残り時間も更新
     const handleWorkChange = (value: string) => {
@@ -65,6 +103,19 @@ export default function PomodoroTimerPage() {
     };
 
     const handleStart = () => {
+        // AudioContextの初期化（ユーザー操作が必要なためここで行う）
+        if (!audioCtxRef.current) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            if (AudioContext) {
+                audioCtxRef.current = new AudioContext();
+            }
+        }
+        // サスペンド状態なら再開
+        if (audioCtxRef.current?.state === 'suspended') {
+            audioCtxRef.current.resume();
+        }
+
         // 初回スタートで残り時間が0なら、今のモードの分数からセット
         setRemainingSeconds((prev) => {
             if (prev > 0) return prev;
@@ -106,8 +157,8 @@ export default function PomodoroTimerPage() {
                 <div className="mb-4 text-center">
                     <span
                         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${mode === "work"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : "bg-sky-50 text-sky-700 border border-sky-200"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : "bg-sky-50 text-sky-700 border border-sky-200"
                             }`}
                     >
                         {mode === "work" ? "作業中" : "休憩中"}
@@ -178,3 +229,4 @@ export default function PomodoroTimerPage() {
         </div>
     );
 }
+
