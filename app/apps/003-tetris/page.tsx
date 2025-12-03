@@ -124,13 +124,24 @@ function useRepeatAction(action: () => void, delay = 200, interval = 50) {
     };
 }
 
-// Hook for handling single press (no repeat)
-function useSingleAction(action: () => void) {
+// Hook for handling single press (no repeat) with throttling
+function useSingleAction(action: () => void, throttleMs = 100) {
+    const lastRun = useRef(0);
+
     const start = useCallback((e: React.TouchEvent | React.MouseEvent) => {
-        // Prevent default to stop scrolling/selection, but allow click propagation if needed
-        if (e.cancelable) e.preventDefault();
+        // Prevent default to stop scrolling/selection and avoid double-firing (touch -> mouse)
+        if (e.cancelable) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        const now = Date.now();
+        if (now - lastRun.current < throttleMs) {
+            return;
+        }
+        lastRun.current = now;
         action();
-    }, [action]);
+    }, [action, throttleMs]);
 
     return {
         onTouchStart: start,
@@ -447,9 +458,9 @@ export default function TetrisPage() {
     const handleSoftDrop = useRepeatAction(() => controlsRef.current?.softDrop(), 100, 50); // Faster repeat for drop
 
     // Rotate should not repeat on hold, it's a single action
-    const handleRotate = useSingleAction(() => controlsRef.current?.rotate());
+    const handleRotate = useSingleAction(() => controlsRef.current?.rotate(), 100);
 
-    const handleHardDrop = useSingleAction(() => controlsRef.current?.hardDrop()); // No repeat for hard drop
+    const handleHardDrop = useSingleAction(() => controlsRef.current?.hardDrop(), 500); // Long throttle to prevent double drop
 
 
     return (
