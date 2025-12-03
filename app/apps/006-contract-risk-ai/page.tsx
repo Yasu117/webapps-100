@@ -117,42 +117,10 @@ export default function ContractRiskAiPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* テキスト入力カード */}
-                    <div className="bg-white shadow rounded-lg p-6 space-y-4">
-                        <h2 className="text-lg font-semibold text-slate-800">
-                            A. テキストから分析
-                        </h2>
-                        <div>
-                            <textarea
-                                rows={12}
-                                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                placeholder="ここに契約書の条文を貼り付けてください..."
-                                value={contractText}
-                                onChange={(e) => setContractText(e.target.value)}
-                                maxLength={10000}
-                                disabled={isLoadingText || isLoadingFile}
-                            />
-                            <div className="text-right text-xs text-slate-500 mt-1">
-                                {contractText.length}文字
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleTextSubmit}
-                            disabled={isLoadingText || isLoadingFile || !contractText.trim()}
-                            className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors
-                ${isLoadingText || isLoadingFile || !contractText.trim()
-                                    ? "bg-slate-400 cursor-not-allowed"
-                                    : "bg-indigo-600 hover:bg-indigo-700"
-                                }`}
-                        >
-                            {isLoadingText ? "分析中..." : "テキストから分析"}
-                        </button>
-                    </div>
-
                     {/* ファイルアップロードカード */}
                     <div className="bg-white shadow rounded-lg p-6 space-y-4">
                         <h2 className="text-lg font-semibold text-slate-800">
-                            B. ファイルから分析
+                            A. ファイルから分析
                         </h2>
                         <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:bg-slate-50 transition">
                             <input
@@ -189,6 +157,38 @@ export default function ContractRiskAiPage() {
                                 }`}
                         >
                             {isLoadingFile ? "分析中..." : "ファイルをアップロードして分析"}
+                        </button>
+                    </div>
+
+                    {/* テキスト入力カード */}
+                    <div className="bg-white shadow rounded-lg p-6 space-y-4">
+                        <h2 className="text-lg font-semibold text-slate-800">
+                            B. テキストから分析
+                        </h2>
+                        <div>
+                            <textarea
+                                rows={12}
+                                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="ここに契約書の条文を貼り付けてください..."
+                                value={contractText}
+                                onChange={(e) => setContractText(e.target.value)}
+                                maxLength={10000}
+                                disabled={isLoadingText || isLoadingFile}
+                            />
+                            <div className="text-right text-xs text-slate-500 mt-1">
+                                {contractText.length}文字
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleTextSubmit}
+                            disabled={isLoadingText || isLoadingFile || !contractText.trim()}
+                            className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white transition-colors
+                ${isLoadingText || isLoadingFile || !contractText.trim()
+                                    ? "bg-slate-400 cursor-not-allowed"
+                                    : "bg-indigo-600 hover:bg-indigo-700"
+                                }`}
+                        >
+                            {isLoadingText ? "分析中..." : "テキストから分析"}
                         </button>
                     </div>
                 </div>
