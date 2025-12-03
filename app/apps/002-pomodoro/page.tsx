@@ -144,13 +144,7 @@ export default function PomodoroTimerPage() {
                             ポモドーロタイマー
                         </h1>
                     </div>
-                    <button
-                        type="button"
-                        className="h-8 w-8 flex items-center justify-center rounded-full border border-slate-300 text-slate-500 text-sm"
-                        aria-label="設定（ダミー）"
-                    >
-                        ⚙️
-                    </button>
+
                 </div>
 
                 {/* モード表示 */}
@@ -184,7 +178,8 @@ export default function PomodoroTimerPage() {
                             min={1}
                             value={workMinutes}
                             onChange={(e) => handleWorkChange(e.target.value)}
-                            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
+                            onFocus={(e) => e.target.select()}
+                            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400"
                         />
                     </div>
                     <div>
@@ -205,11 +200,14 @@ export default function PomodoroTimerPage() {
                 <div className="flex gap-4">
                     <button
                         type="button"
-                        onClick={handleStart}
-                        className="flex-1 inline-flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold bg-emerald-500 hover:bg-emerald-600 text-white transition"
+                        onClick={isRunning ? handleStop : handleStart}
+                        className={`flex-1 inline-flex items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold text-white transition ${isRunning
+                            ? "bg-yellow-500 hover:bg-yellow-600"
+                            : "bg-emerald-500 hover:bg-emerald-600"
+                            }`}
                     >
-                        <span>▶</span>
-                        <span>START</span>
+                        <span>{isRunning ? "⏸" : "▶"}</span>
+                        <span>{isRunning ? "PAUSE" : "START"}</span>
                     </button>
                     <button
                         type="button"
