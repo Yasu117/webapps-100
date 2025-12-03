@@ -124,6 +124,20 @@ function useRepeatAction(action: () => void, delay = 200, interval = 50) {
     };
 }
 
+// Hook for handling single press (no repeat)
+function useSingleAction(action: () => void) {
+    const start = useCallback((e: React.TouchEvent | React.MouseEvent) => {
+        // Prevent default to stop scrolling/selection, but allow click propagation if needed
+        if (e.cancelable) e.preventDefault();
+        action();
+    }, [action]);
+
+    return {
+        onTouchStart: start,
+        onMouseDown: start,
+    };
+}
+
 export default function TetrisPage() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [score, setScore] = useState(0);
@@ -433,9 +447,9 @@ export default function TetrisPage() {
     const handleSoftDrop = useRepeatAction(() => controlsRef.current?.softDrop(), 100, 50); // Faster repeat for drop
 
     // Rotate should not repeat on hold, it's a single action
-    const handleRotate = () => controlsRef.current?.rotate();
+    const handleRotate = useSingleAction(() => controlsRef.current?.rotate());
 
-    const handleHardDrop = () => controlsRef.current?.hardDrop(); // No repeat for hard drop
+    const handleHardDrop = useSingleAction(() => controlsRef.current?.hardDrop()); // No repeat for hard drop
 
 
     return (
@@ -500,16 +514,14 @@ export default function TetrisPage() {
                 {/* Row 1: Rotate & Hard Drop */}
                 <div className="grid grid-cols-2 gap-3 mb-3">
                     <button
-                        onTouchStart={(e) => { e.preventDefault(); handleRotate(); }}
-                        onClick={handleRotate}
+                        {...handleRotate}
                         className="h-16 bg-slate-800 active:bg-slate-700 rounded-2xl shadow-[0_4px_0_0_rgba(15,23,42,0.5)] active:shadow-none active:translate-y-[4px] flex flex-col items-center justify-center transition-all border border-slate-700"
                     >
                         <span className="text-2xl mb-0.5">↻</span>
                         <span className="text-[10px] font-bold text-slate-400 tracking-wide">ROTATE</span>
                     </button>
                     <button
-                        onTouchStart={(e) => { e.preventDefault(); handleHardDrop(); }}
-                        onClick={handleHardDrop}
+                        {...handleHardDrop}
                         className="h-16 bg-rose-600 active:bg-rose-700 rounded-2xl shadow-[0_4px_0_0_rgba(136,19,55,0.5)] active:shadow-none active:translate-y-[4px] flex flex-col items-center justify-center transition-all border border-rose-500"
                     >
                         <span className="text-2xl mb-0.5">⏬</span>
