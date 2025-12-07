@@ -108,12 +108,12 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 p-8 font-sans text-gray-900">
-            <div className="max-w-5xl mx-auto space-y-12">
+        <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
+            <div className="max-w-5xl mx-auto space-y-6 md:space-y-12">
 
                 {/* Header */}
                 <header className="text-center space-y-4">
-                    <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">
+                    <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-gray-900">
                         AI-OCR 受発注入力
                     </h1>
                     <p className="text-lg text-gray-500 max-w-2xl mx-auto">
@@ -123,10 +123,10 @@ export default function Page() {
                 </header>
 
                 {/* Main Content */}
-                <main className="space-y-12">
+                <main className="space-y-6 md:space-y-12">
 
                     {/* Section 1: Upload */}
-                    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-8">
                         <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                             <span className="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm">1</span>
                             注文書のアップロード
@@ -137,7 +137,7 @@ export default function Page() {
                     {/* Section 2: Result (Conditional) */}
                     {currentOrder && (
                         <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-8">
                                 <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                                     <span className="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm">2</span>
                                     解析結果の確認

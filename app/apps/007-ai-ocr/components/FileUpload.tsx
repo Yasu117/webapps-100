@@ -52,7 +52,7 @@ export function FileUpload({ onAnalyze, isAnalyzing }: FileUploadProps) {
         <div className="w-full max-w-2xl mx-auto">
             <div
                 className={twMerge(
-                    "relative border-2 border-dashed rounded-xl p-10 transition-all duration-200 ease-in-out flex flex-col items-center justify-center text-center cursor-pointer",
+                    "relative border-2 border-dashed rounded-xl p-6 md:p-10 transition-all duration-200 ease-in-out flex flex-col items-center justify-center text-center cursor-pointer",
                     isDragging ? "border-blue-500 bg-blue-50/50" : "border-gray-200 hover:border-blue-400 hover:bg-gray-50",
                     file ? "bg-white border-blue-200" : "bg-white"
                 )}
