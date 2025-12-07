@@ -9,6 +9,38 @@ export default function ContractRiskAiPage() {
     const [isLoadingText, setIsLoadingText] = useState(false);
     const [isLoadingFile, setIsLoadingFile] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            const file = e.dataTransfer.files[0];
+            // 拡張子チェック
+            const validExtensions = ['.pdf', '.docx'];
+            const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+            if (file.type === "application/pdf" ||
+                file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+                validExtensions.includes(fileExtension)) {
+                setSelectedFile(file);
+                setError(null);
+            } else {
+                setError("対応していないファイル形式です。PDFまたはWordファイルを選択してください。");
+            }
+        }
+    };
 
     const handleTextSubmit = async () => {
         if (!contractText.trim()) return;
@@ -122,26 +154,56 @@ export default function ContractRiskAiPage() {
                         <h2 className="text-lg font-semibold text-slate-800">
                             A. ファイルから分析
                         </h2>
-                        <div className="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center hover:bg-slate-50 transition">
+
+                        <div
+                            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer
+                                ${isDragging
+                                    ? "border-indigo-500 bg-indigo-50"
+                                    : "border-slate-300 hover:bg-slate-50"
+                                }
+                                ${selectedFile ? "bg-slate-50" : ""}
+                            `}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            onClick={() => document.getElementById('file-upload')?.click()}
+                        >
                             <input
+                                id="file-upload"
                                 type="file"
                                 accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                 onChange={handleFileChange}
-                                className="block w-full text-sm text-slate-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-indigo-50 file:text-indigo-700
-                  hover:file:bg-indigo-100
-                "
+                                className="hidden"
                                 disabled={isLoadingText || isLoadingFile}
                             />
-                            {selectedFile && (
-                                <div className="mt-2 text-sm text-slate-600">
-                                    選択中: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
+
+                            <div className="space-y-2 pointer-events-none">
+                                <div className="mx-auto h-12 w-12 text-slate-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
                                 </div>
-                            )}
+
+                                {selectedFile ? (
+                                    <div className="text-sm text-slate-900 font-medium">
+                                        <p>選択中: {selectedFile.name}</p>
+                                        <p className="text-slate-500 text-xs mt-1">
+                                            ({(selectedFile.size / 1024).toFixed(1)} KB)
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <p className="text-sm text-slate-600 font-medium">
+                                            ファイルをドラッグ＆ドロップ
+                                        </p>
+                                        <p className="text-xs text-slate-500">
+                                            または クリックして選択
+                                        </p>
+                                    </>
+                                )}
+                            </div>
                         </div>
+
                         <p className="text-xs text-slate-500">
                             ※スキャンPDF（画像だけのPDF）の場合はテキストを抽出できないことがあります。
                             <br />

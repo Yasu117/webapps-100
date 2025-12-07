@@ -3,7 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const getApiKey = () => {
     // ユーザー指定の GEMINI_API_KEY を優先しつつ、
     // 以前設定した GOOGLE_API_KEY にもフォールバック対応
-    return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    // return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    return "AIzaSyDAjCJWwghwY3_UCdrh2IL_NlLmMYKBQZk";
 };
 
 export const getGeminiClient = () => {
