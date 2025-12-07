@@ -73,17 +73,18 @@ export function ExtractionForm({ initialData, onSave, onCancel }: ExtractionForm
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
             <div className="min-w-[800px]">
-                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <div className="px-4 py-3 md:px-6 md:py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                     <h2 className="text-lg font-semibold text-gray-800">解析結果の確認・編集</h2>
                     <button onClick={onCancel} className="text-sm text-gray-500 hover:text-gray-700">
                         キャンセル
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-8">
+                <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-8">
 
                     {/* 基本情報 */}
-                    <div className="grid grid-cols-3 gap-6">
+                    {/* 基本情報 */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-gray-500 uppercase">発注書番号</label>
                             <input
@@ -116,7 +117,7 @@ export function ExtractionForm({ initialData, onSave, onCancel }: ExtractionForm
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-8 border-t border-b border-gray-100 py-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-b border-gray-100 py-6">
                         {/* 発注元 */}
                         <div className="space-y-4">
                             <h3 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -187,7 +188,7 @@ export function ExtractionForm({ initialData, onSave, onCancel }: ExtractionForm
                     </div>
 
                     {/* 条件系 */}
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-gray-500 uppercase">納入場所</label>
                             <input
