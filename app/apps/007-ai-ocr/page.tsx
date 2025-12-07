@@ -108,7 +108,7 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 md:p-8 font-sans text-gray-900">
+        <div className="min-h-dvh bg-slate-50 p-4 md:p-8 font-sans text-gray-900">
             <div className="max-w-5xl mx-auto space-y-6 md:space-y-12">
 
                 {/* Header */}
