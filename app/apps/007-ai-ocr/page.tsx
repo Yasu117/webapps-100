@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FileUpload } from './components/FileUpload';
+
 import { ExtractionForm } from './components/ExtractionForm';
 import { HistoryTable } from './components/HistoryTable';
 import { OrderData } from './types';
