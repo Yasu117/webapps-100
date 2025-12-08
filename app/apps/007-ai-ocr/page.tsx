@@ -11,6 +11,11 @@ import { twMerge } from 'tailwind-merge';
 
 import { analyzeImage, checkEnvVars } from './actions';
 
+export const viewport = {
+    colorScheme: 'light',
+    themeColor: '#ffffff',
+};
+
 export default function Page() {
     const [orders, setOrders] = useState<OrderData[]>([]);
     const [currentOrder, setCurrentOrder] = useState<OrderData | null>(null);
