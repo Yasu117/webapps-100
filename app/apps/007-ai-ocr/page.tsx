@@ -113,8 +113,11 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-dvh bg-white p-4 md:p-8 font-sans text-gray-900" style={{ backgroundColor: '#ffffff', color: '#111827' }}>
-            <div className="max-w-5xl mx-auto space-y-6 md:space-y-12">
+        <div className="min-h-dvh relative font-sans text-gray-900">
+            {/* Forced White Background Layer */}
+            <div className="fixed inset-0 bg-white z-[-1]" aria-hidden="true" style={{ backgroundColor: '#ffffff', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }} />
+
+            <div className="max-w-5xl mx-auto space-y-6 md:space-y-12 p-4 md:p-8">
 
                 {/* Header */}
                 <header className="text-center space-y-4">
