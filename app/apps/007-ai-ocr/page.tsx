@@ -112,6 +112,33 @@ export default function Page() {
         }
     };
 
+    // 006のデザインに合わせたドラッグ＆ドロップ関連の状態管理
+    const [isDragging, setIsDragging] = useState(false);
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleAnalyze(e.dataTransfer.files[0]);
+        }
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            handleAnalyze(e.target.files[0]);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto space-y-8">
@@ -127,25 +154,71 @@ export default function Page() {
                     </p>
                 </div>
 
-                {/* Main Content */}
-                <div className="space-y-6">
-
-                    {/* Section 1: Upload */}
+                <div className="grid grid-cols-1 gap-6">
+                    {/* ファイルアップロードカード (006のデザインを移植) */}
                     <div className="bg-white shadow rounded-lg p-6 space-y-4">
-                        <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <span className="w-6 h-6 bg-blue-600 text-white rounded-md flex items-center justify-center text-xs">A</span>
-                            注文書のアップロード
+                        <h2 className="text-lg font-semibold text-slate-800">
+                            A. 注文書のアップロード
                         </h2>
-                        <FileUpload onAnalyze={handleAnalyze} isAnalyzing={isAnalyzing} />
+
+                        <div
+                            className={twMerge(
+                                "border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer",
+                                isDragging
+                                    ? "border-indigo-500 bg-indigo-50"
+                                    : "border-slate-300 hover:bg-slate-50",
+                                isAnalyzing ? "opacity-50 cursor-not-allowed" : ""
+                            )}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            onClick={() => !isAnalyzing && document.getElementById('file-upload')?.click()}
+                        >
+                            <input
+                                id="file-upload"
+                                type="file"
+                                accept="image/*,.pdf"
+                                onChange={handleFileChange}
+                                className="hidden"
+                                disabled={isAnalyzing}
+                            />
+
+                            <div className="space-y-2 pointer-events-none">
+                                <div className="mx-auto h-12 w-12 text-slate-400">
+                                    {/* 006と同じアイコン (Document icon) */}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                </div>
+
+                                <p className="text-sm text-slate-600 font-medium">
+                                    ファイルをドラッグ＆ドロップ
+                                </p>
+                                <p className="text-xs text-slate-500">
+                                    または クリックして選択
+                                </p>
+                            </div>
+                        </div>
+
+                        <p className="text-xs text-slate-500">
+                            ※ 画像ファイル (JPG, PNG) または PDF に対応しています。<br />
+                            AI解析には数秒〜数十秒かかる場合があります。
+                        </p>
+
+                        {/* ローディング表示 */}
+                        {isAnalyzing && (
+                            <div className="text-center text-blue-600 font-medium animate-pulse mt-4">
+                                解析中...
+                            </div>
+                        )}
                     </div>
 
                     {/* Section 2: Result (Conditional) */}
                     {currentOrder && (
                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                             <div className="bg-white shadow rounded-lg p-6 space-y-4 border border-slate-200">
-                                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                                    <span className="w-6 h-6 bg-blue-600 text-white rounded-md flex items-center justify-center text-xs">B</span>
-                                    解析結果の確認
+                                <h2 className="text-lg font-semibold text-slate-800">
+                                    B. 解析結果の確認
                                 </h2>
                                 <ExtractionForm
                                     initialData={currentOrder}
@@ -158,13 +231,11 @@ export default function Page() {
 
                     {/* Section 3: History */}
                     <div className="bg-white shadow rounded-lg p-6 space-y-4">
-                        <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                            <span className="w-6 h-6 bg-slate-600 text-white rounded-md flex items-center justify-center text-xs">C</span>
-                            最近の保存データ
+                        <h2 className="text-lg font-semibold text-slate-800">
+                            C. 最近の保存データ
                         </h2>
                         <HistoryTable orders={orders} />
                     </div>
-
                 </div>
 
                 <footer className="mt-12 py-6 text-center text-slate-400 text-sm border-t border-slate-200">
