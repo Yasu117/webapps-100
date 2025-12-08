@@ -29,6 +29,21 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
+        // Force body background to white on mount to solve persistent mobile background color issues
+        const originalBg = document.body.style.backgroundColor;
+        const originalColor = document.body.style.color;
+
+        document.body.style.setProperty('background-color', '#ffffff', 'important');
+        document.body.style.setProperty('color', '#111827', 'important');
+
+        return () => {
+            // Restore on unmount
+            document.body.style.backgroundColor = originalBg;
+            document.body.style.color = originalColor;
+        };
+    }, []);
+
+    useEffect(() => {
         if (toast) {
             const timer = setTimeout(() => setToast(null), 3000);
             return () => clearTimeout(timer);
