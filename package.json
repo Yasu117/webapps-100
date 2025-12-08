@@ -1,6 +1,7 @@
 {
   "name": "webapps-100",
   "version": "0.1.0",
+  "description": "AI Agent Web Apps Collection",
   "private": true,
   "scripts": {
     "dev": "next dev",
