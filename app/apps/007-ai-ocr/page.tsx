@@ -108,7 +108,7 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-dvh bg-white p-4 md:p-8 font-sans text-gray-900" style={{ backgroundColor: '#ffffff', color: '#111827' }}>
+        <div className="min-h-dvh bg-white p-4 md:p-8 font-sans text-gray-900">
             <div className="max-w-5xl mx-auto space-y-6 md:space-y-12">
 
                 {/* Header */}
@@ -116,7 +116,7 @@ export default function Page() {
                     <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-gray-900">
                         AI-OCR 受発注入力
                     </h1>
-                    <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+                    <p className="text-lg text-gray-900 max-w-2xl mx-auto">
                         注文書をアップロードするだけで、AIが内容を自動で読み取りデータ化します。<br />
                         手入力の手間を削減し、業務効率を劇的に向上させます。
                     </p>
