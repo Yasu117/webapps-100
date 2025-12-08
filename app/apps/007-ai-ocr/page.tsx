@@ -29,21 +29,6 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
-        // Force body background to white on mount to solve persistent mobile background color issues
-        const originalBg = document.body.style.backgroundColor;
-        const originalColor = document.body.style.color;
-
-        document.body.style.setProperty('background-color', '#ffffff', 'important');
-        document.body.style.setProperty('color', '#111827', 'important');
-
-        return () => {
-            // Restore on unmount
-            document.body.style.backgroundColor = originalBg;
-            document.body.style.color = originalColor;
-        };
-    }, []);
-
-    useEffect(() => {
         if (toast) {
             const timer = setTimeout(() => setToast(null), 3000);
             return () => clearTimeout(timer);
@@ -128,18 +113,15 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-dvh relative font-sans text-gray-900">
-            {/* Forced White Background Layer */}
-            <div className="fixed inset-0 bg-white z-[-1]" aria-hidden="true" style={{ backgroundColor: '#ffffff', position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }} />
-
-            <div className="max-w-5xl mx-auto space-y-6 md:space-y-12 p-4 md:p-8">
+        <div className="min-h-dvh w-full bg-white px-4 py-6 md:p-8 font-sans text-gray-900" style={{ backgroundColor: '#ffffff', color: '#111827' }}>
+            <div className="max-w-5xl mx-auto space-y-6 md:space-y-12">
 
                 {/* Header */}
                 <header className="text-center space-y-4">
                     <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-gray-900">
                         AI-OCR 受発注入力
                     </h1>
-                    <p className="text-lg text-gray-900 max-w-2xl mx-auto">
+                    <p className="text-lg text-black max-w-2xl mx-auto font-medium">
                         注文書をアップロードするだけで、AIが内容を自動で読み取りデータ化します。<br />
                         手入力の手間を削減し、業務効率を劇的に向上させます。
                     </p>
