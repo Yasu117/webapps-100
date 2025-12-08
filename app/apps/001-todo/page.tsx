@@ -42,7 +42,7 @@ export default function TodoApp() {
     return (
         <div className="min-h-screen bg-slate-900 text-white p-6">
             <div className="max-w-md mx-auto space-y-6">
-                <h1 className="text-3xl font-bold text-center">シンプルToDo</h1>
+                <h1 className="text-3xl font-bold text-center">001 シンプルToDo</h1>
 
                 {/* 入力欄 */}
                 <div className="flex gap-2">

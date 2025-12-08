@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker - Webアプリ100本ノック</title>
+    <style>
+        :root {
+            /* Theme Colors based on Mood */
+            --mood-5-color: #86efac;
+            /* Very Good: Green 300 */
+            --mood-4-color: #bef264;
+            /* Good: Lime 300 */
+            --mood-3-color: #e2e8f0;
+            /* Neutral: Slate 200 */
+            --mood-2-color: #fdba74;
+            /* Bad: Orange 300 */
+            --mood-1-color: #fca5a5;
+            /* Very Bad: Red 300 */
+
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+
+            --font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            /* Mobile focused max width */
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Helper Utilities */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-sub {
+            color: var(--text-sub);
+        }
+
+        /* Header / Input Section */
+        header {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .today-date {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .mood-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .mood-btn {
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            opacity: 0.7;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .mood-btn:hover,
+        .mood-btn.selected {
+            transform: scale(1.2);
+            opacity: 1;
+            background-color: #f1f5f9;
+        }
+
+        .mood-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Note Input */
+        .note-area {
+            margin-top: 1rem;
+        }
+
+        #note-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background-color: #f8fafc;
+        }
+
+        #note-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: #ffffff;
+        }
+
+        /* History Section */
+        .history-section {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .history-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .month-nav {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-sub);
+            padding: 0 0.5rem;
+        }
+
+        .calendar-list {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .calendar-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            /* Clickable */
+            border-left: 4px solid transparent;
+            /* Selection indicator placeholder */
+        }
+
+        .calendar-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .calendar-item:last-child {
+            border-bottom: none;
+        }
+
+        .calendar-item.today {
+            background-color: #f0f9ff;
+        }
+
+        /* Currently editing item */
+        .calendar-item.editing {
+            border-left-color: #3b82f6;
+            /* Accent color */
+            background-color: #eff6ff;
+        }
+
+        /* Updated Item Layout */
+        .cal-main-row {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .cal-date-grp {
+            width: 3.5rem;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .cal-date {
+            font-weight: 600;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        .cal-day {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .cal-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .cal-mood-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .cal-mood {
+            font-size: 1.25rem;
+            width: 2rem;
+            text-align: center;
+        }
+
+        .cal-bar {
+            height: 6px;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            flex: 1;
+            background-color: #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cal-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .cal-note {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            padding-left: 0.25rem;
+            word-break: break-all;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background-color: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background-color: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 800px;
+                display: grid;
+                grid-template-columns: 350px 1fr;
+                grid-template-rows: auto auto;
+                align-items: start;
+            }
+
+            header {
+                grid-column: 1 / 2;
+            }
+
+            .stats-section {
+                grid-column: 1 / 2;
+            }
+
+            .history-section {
+                grid-column: 2 / 3;
+                grid-row: 1 / 3;
+                height: 100%;
+                max-height: 600px;
+                /* Limit height on PC */
+                display: flex;
+                flex-direction: column;
+            }
+
+            .calendar-list {
+                flex: 1;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Input Header -->
+        <header>
+            <h1 class="text-lg font-bold mb-2">009 Mood Tracker</h1>
+            <div id="today-display" class="today-date">Loading...</div>
+            <p class="text-sm text-sub">今日の気分はどうですか？</p>
+            <div class="mood-buttons">
+                <button class="mood-btn" data-score="5" title="最高">😀</button>
+                <button class="mood-btn" data-score="4" title="良い">🙂</button>
+                <button class="mood-btn" data-score="3" title="ふつう">😐</button>
+                <button class="mood-btn" data-score="2" title="微妙">🙁</button>
+                <button class="mood-btn" data-score="1" title="悪い">😞</button>
+            </div>
+            <div class="note-area">
+                <input type="text" id="note-input" placeholder="ひとことメモ（任意）" maxlength="50" autocomplete="off" />
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-label">今月の平均</div>
+                <div id="avg-mood" class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">多い気分</div>
+                <div id="top-mood" class="stat-value">-</div>
+            </div>
+        </div>
+
+        <!-- History List -->
+        <div class="history-section">
+            <div class="history-header">
+                <button id="prev-month" class="month-nav">&lt;</button>
+                <h2 id="current-month-display" class="font-bold text-lg">Loading...</h2>
+                <button id="next-month" class="month-nav">&gt;</button>
+            </div>
+            <ul id="history-list" class="calendar-list">
+                <!-- Items injected by JS -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const STORAGE_KEY = 'app-009-mood-tracker';
+        const MOODS = {
+            5: { emoji: '😀', color: 'var(--mood-5-color)', label: '最高' },
+            4: { emoji: '🙂', color: 'var(--mood-4-color)', label: '良い' },
+            3: { emoji: '😐', color: 'var(--mood-3-color)', label: 'ふつう' },
+            2: { emoji: '🙁', color: 'var(--mood-2-color)', label: '微妙' },
+            1: { emoji: '😞', color: 'var(--mood-1-color)', label: '悪い' }
+        };
+        const DAYS_JP = ['日', '月', '火', '水', '木', '金', '土'];
+
+        // --- State ---
+        let currentDate = new Date();
+        // displayYear/Month tracks the calendar view
+        let displayYear = currentDate.getFullYear();
+        let displayMonth = currentDate.getMonth();
+        // editingDate tracks which date needs to be edited in the header
+        let editingDate = new Date();
+
+        // --- Elements ---
+        const todayDisplay = document.getElementById('today-display');
+        const moodBtns = document.querySelectorAll('.mood-btn');
+        const monthDisplay = document.getElementById('current-month-display');
+        const listContainer = document.getElementById('history-list');
+        const prevBtn = document.getElementById('prev-month');
+        const nextBtn = document.getElementById('next-month');
+        const avgMoodEl = document.getElementById('avg-mood');
+        const topMoodEl = document.getElementById('top-mood');
+        const noteInput = document.getElementById('note-input');
+
+        // --- Functions ---
+
+        function getFormattedDate(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function loadData() {
+            const json = localStorage.getItem(STORAGE_KEY);
+            return json ? JSON.parse(json) : {};
+        }
+
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // ヘッダー（入力エリア）の更新：編集中の日付の情報を表示
+        function updateHeader() {
+            // Display formatted date
+            const m = editingDate.getMonth() + 1;
+            const d = editingDate.getDate();
+            const w = DAYS_JP[editingDate.getDay()];
+
+            let label = `${m}月${d}日 (${w})`;
+
+            // If editing today, maybe add text? or just keep it simple.
+            const todayKey = getFormattedDate(new Date());
+            const editingKey = getFormattedDate(editingDate);
+            if (todayKey === editingKey) {
+                // It's today
+            } else {
+                // It's past/future
+                label += " の記録"; // Make it clear we are editing specific date
+            }
+
+            todayDisplay.textContent = label;
+
+            // Load data for this date
+            const data = loadData();
+            const entry = data[editingKey];
+
+            let score = null;
+            let note = '';
+
+            if (entry) {
+                if (typeof entry === 'number') {
+                    score = entry;
+                } else {
+                    score = entry.score;
+                    note = entry.note || '';
+                }
+            }
+
+            moodBtns.forEach(btn => {
+                btn.classList.remove('selected');
+                if (score && parseInt(btn.dataset.score) === score) {
+                    btn.classList.add('selected');
+                }
+            });
+
+            noteInput.value = note || '';
+        }
+
+        // 履歴リストの描画
+        function renderCalendar() {
+            const data = loadData();
+            listContainer.innerHTML = '';
+
+            monthDisplay.textContent = `${displayYear}年 ${displayMonth + 1}月`;
+
+            // 月の日数取得
+            const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
+            const todayKey = getFormattedDate(new Date());
+            const editingKey = getFormattedDate(editingDate);
+
+            let totalScore = 0;
+            let count = 0;
+            const moodCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateObj = new Date(displayYear, displayMonth, d);
+                const dateKey = getFormattedDate(dateObj);
+
+                const entry = data[dateKey];
+                let score = null;
+                let note = '';
+
+                if (entry) {
+                    if (typeof entry === 'number') {
+                        score = entry;
+                    } else {
+                        score = entry.score;
+                        note = entry.note || '';
+                    }
+                }
+
+                const dayOfWeek = DAYS_JP[dateObj.getDay()];
+                const isToday = (dateKey === todayKey);
+                const isEditing = (dateKey === editingKey);
+
+                if (score) {
+                    totalScore += score;
+                    count++;
+                    moodCounts[score]++;
+                }
+
+                const li = document.createElement('li');
+                li.className = `calendar-item ${isToday ? 'today' : ''} ${isEditing ? 'editing' : ''}`;
+
+                // Allow clicking to edit this date
+                li.addEventListener('click', () => {
+                    editingDate = dateObj; // Switch editing target
+                    updateHeader();
+                    renderCalendar(); // Re-render to update selection highlight
+                    // Scroll to top to show input area? Or just let user scroll?
+                    // On mobile, smooth scroll to top might be nice.
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                const barWidth = score ? (score / 5) * 100 : 0;
+                const barColor = score ? MOODS[score].color : 'transparent';
+                const displayNote = note ? `<div class="cal-note">${note}</div>` : '';
+
+                li.innerHTML = `
+                <div class="cal-main-row">
+                    <div class="cal-date-grp">
+                        <span class="cal-date">${d}</span>
+                        <span class="cal-day">(${dayOfWeek})</span>
+                    </div>
+                    <div class="cal-content">
+                        <div class="cal-mood-row">
+                             <div class="cal-mood">${score ? MOODS[score].emoji : ''}</div>
+                             <div class="cal-bar">
+                                 <div class="cal-bar-fill" style="width: ${barWidth}%; background-color: ${barColor}"></div>
+                             </div>
+                        </div>
+                        ${displayNote}
+                    </div>
+                </div>
+            `;
+
+                listContainer.appendChild(li);
+
+                if (isEditing) {
+                    // Keep editing item in view?? No, usually we want to see it but we might have just clicked it.
+                }
+            }
+
+            // Stats Update
+            if (count > 0) {
+                const avg = (totalScore / count).toFixed(1);
+                avgMoodEl.textContent = avg;
+
+                let maxCount = 0;
+                let modeScore = null;
+                Object.keys(moodCounts).forEach(s => {
+                    if (moodCounts[s] > maxCount) {
+                        maxCount = moodCounts[s];
+                        modeScore = s;
+                    }
+                });
+                topMoodEl.textContent = modeScore ? MOODS[modeScore].emoji : '-';
+            } else {
+                avgMoodEl.textContent = '-';
+                topMoodEl.textContent = '-';
+            }
+        }
+
+        // --- Event Listeners ---
+
+        // Save Data Function
+        function saveCurrentData() {
+            const targetKey = getFormattedDate(editingDate); // Save to whichever date is being edited
+            const data = loadData();
+
+            // Find currently selected score
+            const selectedBtn = document.querySelector('.mood-btn.selected');
+            const score = selectedBtn ? parseInt(selectedBtn.dataset.score) : null;
+
+            if (score !== null) {
+                data[targetKey] = {
+                    score: score,
+                    note: noteInput.value
+                };
+                saveData(data);
+
+                // Update calendar if the edited date is in the currently viewed month
+                if (displayYear === editingDate.getFullYear() && displayMonth === editingDate.getMonth()) {
+                    renderCalendar();
+                }
+            }
+        }
+
+        // Reset to Today when clicking the date header
+        todayDisplay.style.cursor = 'pointer';
+        todayDisplay.title = '今日に戻る';
+        todayDisplay.addEventListener('click', () => {
+            editingDate = new Date();
+            // Also ensure we look at the current month
+            displayYear = editingDate.getFullYear();
+            displayMonth = editingDate.getMonth();
+
+            updateHeader();
+            renderCalendar();
+        });
+
+        // Mood Input
+        moodBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                moodBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                saveCurrentData();
+            });
+        });
+
+        // Note Input
+        noteInput.addEventListener('change', saveCurrentData);
+        let noteTimeout;
+        noteInput.addEventListener('input', () => {
+            clearTimeout(noteTimeout);
+            noteTimeout = setTimeout(saveCurrentData, 1000);
+        });
+
+        // Month Navigation
+        prevBtn.addEventListener('click', () => {
+            displayMonth--;
+            if (displayMonth < 0) {
+                displayMonth = 11;
+                displayYear--;
+            }
+            renderCalendar();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            displayMonth++;
+            if (displayMonth > 11) {
+                displayMonth = 0;
+                displayYear++;
+            }
+            renderCalendar();
+        });
+
+        // Init
+        updateHeader();
+        renderCalendar();
+
+    </script>
+</body>
+
+</html>

@@ -263,7 +263,7 @@ export default function BreakoutPage() {
                             <div className="flex items-center gap-2">
                                 <span className="text-xl">🧱</span>
                                 <h1 className="text-lg font-bold text-slate-50">
-                                    ブロック崩し（ミニ）
+                                    004 ブロック崩し（ミニ）
                                 </h1>
                             </div>
                         </div>

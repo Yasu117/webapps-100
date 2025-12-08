@@ -11,8 +11,7 @@ export async function analyzeImage(formData: FormData): Promise<OrderData | { er
   }
 
   // 環境変数を直接取得
-  // const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-  const apiKey = "AIzaSyDAjCJWwghwY3_UCdrh2IL_NlLmMYKBQZk";
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 
   if (!apiKey) {
     console.error("API Key is missing in actions.ts");
@@ -30,7 +29,7 @@ export async function analyzeImage(formData: FormData): Promise<OrderData | { er
   // クライアントを直接初期化
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash", // 2025年12月現在の最新標準モデル
+    model: "gemini-flash-latest", // 安定版の最新エイリアスを使用
     generationConfig: {
       responseMimeType: "application/json"
     }

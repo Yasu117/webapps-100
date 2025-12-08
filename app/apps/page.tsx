@@ -51,6 +51,27 @@ const apps = [
         description: "注文書（画像/PDF）をアップロードしてAIが自動入力。確認・修正してDB保存する業務効率化ツール。",
         tags: ["AI", "OCR", "業務効率化"],
     },
+    {
+        id: "008",
+        slug: "008-markdown-memo/index.html",
+        title: "Markdownメモ",
+        description: "リアルタイムプレビューと自動保存機能を備えたシンプルなMarkdownエディタ。",
+        tags: ["ツール", "Markdown"],
+    },
+    {
+        id: "009",
+        slug: "009-mood-tracker/index.html",
+        title: "Mood Tracker",
+        description: "その日の気分を5段階で記録して見える化する、メンタル管理アプリ。",
+        tags: ["健康", "ライフスタイル"],
+    },
+    {
+        id: "010",
+        slug: "010-glucose-habit",
+        title: "血糖値習慣サポート",
+        description: "食事記録からAIが血糖値スパイクの傾向を解析し、最適な運動アドバイスを提案する生活習慣改善アプリ。",
+        tags: ["健康", "AI", "生活習慣"],
+    },
     // ここに今後どんどん追加していく
 ];
 

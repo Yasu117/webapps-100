@@ -81,7 +81,10 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         console.error("Error generating requirements:", error);
         return NextResponse.json(
-            { error: "Failed to generate requirements." },
+            {
+                error: `Failed to generate requirements: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                details: error
+            },
             { status: 500 }
         );
     }

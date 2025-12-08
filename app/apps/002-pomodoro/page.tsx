@@ -141,7 +141,7 @@ export default function PomodoroTimerPage() {
                             🍅
                         </span>
                         <h1 className="text-xl font-bold text-slate-800">
-                            ポモドーロタイマー
+                            002 ポモドーロタイマー
                         </h1>
                     </div>
 

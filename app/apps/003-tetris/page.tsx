@@ -467,11 +467,14 @@ export default function TetrisPage() {
         <div className="h-[100dvh] w-full bg-slate-950 flex flex-col items-center overflow-hidden touch-none select-none">
 
             {/* Header: Score & Status */}
-            <div className="w-full max-w-md px-6 pt-4 pb-2 flex justify-between items-end shrink-0">
-                <div>
-                    <h1 className="text-slate-400 text-xs font-bold tracking-wider mb-1">SCORE</h1>
-                    <div className="text-3xl font-mono font-bold text-white leading-none">
-                        {score.toLocaleString()}
+            <div className="w-full max-w-md px-6 pt-4 pb-2 flex flex-col gap-2 shrink-0">
+                <h1 className="text-white font-bold text-center">003 テトリス（ミニ）</h1>
+                <div className="flex justify-between items-end w-full">
+                    <div>
+                        <h2 className="text-slate-400 text-xs font-bold tracking-wider mb-1">SCORE</h2>
+                        <div className="text-3xl font-mono font-bold text-white leading-none">
+                            {score.toLocaleString()}
+                        </div>
                     </div>
                 </div>
                 <div className="text-right">

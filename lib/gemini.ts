@@ -3,8 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const getApiKey = () => {
     // ユーザー指定の GEMINI_API_KEY を優先しつつ、
     // 以前設定した GOOGLE_API_KEY にもフォールバック対応
-    // return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-    return "AIzaSyDAjCJWwghwY3_UCdrh2IL_NlLmMYKBQZk";
+    return process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
 };
 
 export const getGeminiClient = () => {
@@ -20,8 +19,8 @@ export const getRequirementsModel = () => {
     if (!client) {
         return null;
     }
-    // モデルは gemini-2.0-flash を指定（最新の推奨モデル）
-    return client.getGenerativeModel({ model: "gemini-2.0-flash" });
+    // モデルは gemini-flash-latest を指定（利用可能リストに存在する安定版エイリアス）
+    return client.getGenerativeModel({ model: "gemini-flash-latest" });
 };
 
 export const getLegalModel = () => {
@@ -29,6 +28,6 @@ export const getLegalModel = () => {
     if (!client) {
         return null;
     }
-    // 契約書チェック用も同じ最新モデルを使用
-    return client.getGenerativeModel({ model: "gemini-2.0-flash" });
+    // 契約書チェック用も同じモデルを使用
+    return client.getGenerativeModel({ model: "gemini-flash-latest" });
 };
