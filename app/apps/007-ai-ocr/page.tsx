@@ -113,38 +113,38 @@ export default function Page() {
     };
 
     return (
-        <div className="min-h-dvh w-full bg-white px-4 py-6 md:p-8 font-sans text-gray-900" style={{ backgroundColor: '#ffffff', color: '#111827' }}>
-            <div className="max-w-5xl mx-auto space-y-6 md:space-y-12">
+        <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header */}
-                <header className="text-center space-y-4">
-                    <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-                        AI-OCR 受発注入力
+                <div className="text-center">
+                    <h1 className="text-3xl font-bold text-slate-900">
+                        007 AI-OCR 受発注入力
                     </h1>
-                    <p className="text-lg text-black max-w-2xl mx-auto font-medium">
-                        注文書をアップロードするだけで、AIが内容を自動で読み取りデータ化します。<br />
+                    <p className="mt-2 text-slate-600">
+                        注文書をアップロードするだけで、AIが内容を自動で読み取りデータ化します。
                         手入力の手間を削減し、業務効率を劇的に向上させます。
                     </p>
-                </header>
+                </div>
 
                 {/* Main Content */}
-                <main className="space-y-6 md:space-y-12">
+                <div className="space-y-6">
 
                     {/* Section 1: Upload */}
-                    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-8">
-                        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <span className="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm">1</span>
+                    <div className="bg-white shadow rounded-lg p-6 space-y-4">
+                        <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <span className="w-6 h-6 bg-blue-600 text-white rounded-md flex items-center justify-center text-xs">A</span>
                             注文書のアップロード
                         </h2>
                         <FileUpload onAnalyze={handleAnalyze} isAnalyzing={isAnalyzing} />
-                    </section>
+                    </div>
 
                     {/* Section 2: Result (Conditional) */}
                     {currentOrder && (
-                        <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 md:p-8">
-                                <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                                    <span className="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center text-sm">2</span>
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-white shadow rounded-lg p-6 space-y-4 border border-slate-200">
+                                <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-blue-600 text-white rounded-md flex items-center justify-center text-xs">B</span>
                                     解析結果の確認
                                 </h2>
                                 <ExtractionForm
@@ -153,21 +153,21 @@ export default function Page() {
                                     onCancel={() => setCurrentOrder(null)}
                                 />
                             </div>
-                        </section>
+                        </div>
                     )}
 
                     {/* Section 3: History */}
-                    <section>
-                        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            <span className="w-8 h-8 bg-gray-600 text-white rounded-lg flex items-center justify-center text-sm">3</span>
+                    <div className="bg-white shadow rounded-lg p-6 space-y-4">
+                        <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                            <span className="w-6 h-6 bg-slate-600 text-white rounded-md flex items-center justify-center text-xs">C</span>
                             最近の保存データ
                         </h2>
                         <HistoryTable orders={orders} />
-                    </section>
+                    </div>
 
-                </main>
+                </div>
 
-                <footer className="mt-12 py-6 text-center text-gray-400 text-sm border-t border-gray-200">
+                <footer className="mt-12 py-6 text-center text-slate-400 text-sm border-t border-slate-200">
                     <p>AI-OCR Order Entry System</p>
                     <p className="text-xs mt-2 font-mono">
                         URL: {process.env.NEXT_PUBLIC_SUPABASE_URL ? process.env.NEXT_PUBLIC_SUPABASE_URL.substring(0, 20) + '...' : 'UNDEFINED'}
@@ -175,7 +175,7 @@ export default function Page() {
                     <p className="text-xs">
                         Server Gemini Key: {envStatus?.hasGeminiKey ? `Present (${envStatus.keyPrefix}...)` : 'Missing'}
                     </p>
-                    <p className="text-[10px] text-gray-300 mt-2">v20251207-1830</p>
+                    <p className="text-[10px] text-slate-300 mt-2">v20251207-1830</p>
                 </footer>
             </div>
 
