@@ -15,7 +15,7 @@ export default function MarioGamePage() {
 
         const initGame = async () => {
             const Phaser = await import('phaser');
-            const { Game, Scene, Scale, Input } = Phaser.default;
+            const { Game, Scene, Scale, Input, AUTO } = Phaser.default;
 
             if (cancelled) return;
 
@@ -498,7 +498,7 @@ export default function MarioGamePage() {
             }
 
             const config: Types.Core.GameConfig = {
-                type: Game.AUTO,
+                type: AUTO,
                 width: 640,
                 height: 360,
                 backgroundColor: '#5C94FC',
