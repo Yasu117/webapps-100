@@ -1,11 +1,14 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { Types } from 'phaser';
 
 export default function MarioGamePage() {
     const gameRef = useRef<HTMLDivElement>(null);
     const gameInstance = useRef<Phaser.Game | null>(null);
+
+    // Shared input state between React and Phaser
+    const inputRef = useRef({ left: false, right: false, up: false, down: false });
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -37,11 +40,6 @@ export default function MarioGamePage() {
                 private isBig = false;
                 private heartsText!: Phaser.GameObjects.Text;
                 private scoreText!: Phaser.GameObjects.Text;
-
-                // Virtual Controller State
-                private vLeft = false;
-                private vRight = false;
-                private vJump = false;
 
                 private isGameActive = false;
                 private audioCtx: AudioContext | null = null;
@@ -210,8 +208,8 @@ export default function MarioGamePage() {
                         this.jumpBtn = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.SPACE);
                     }
 
-                    // 2. Setup Virtual Controller (Touch)
-                    this.createVirtualController();
+                    // 2. Setup Virtual Controller (Removed Internal Virtual Controller Logic)
+                    // We are now using external React inputs via inputRef
 
                     // 3. World (Platforms)
                     this.platforms = this.physics.add.staticGroup();
@@ -269,7 +267,7 @@ export default function MarioGamePage() {
                     });
 
                     // Debug Text
-                    this.debugText = this.add.text(10, 10, 'TAP TO START', {
+                    this.debugText = this.add.text(10, 10, 'TAP SCREEN TO START', {
                         font: '20px monospace', color: '#fff', backgroundColor: '#000'
                     }).setScrollFactor(0).setDepth(100);
 
@@ -289,19 +287,31 @@ export default function MarioGamePage() {
                     this.physics.pause();
                     this.input.on('pointerdown', () => {
                         if (!this.isGameActive) {
-                            this.isGameActive = true;
-                            this.lives = 5;
-                            this.score = 0;
-                            this.isBig = false;
-                            this.isInvincible = false;
-                            this.updateHeartsUI();
-                            this.scoreText.setText('SCORE: 0');
-
-                            this.physics.resume();
-                            this.debugText.setText('');
-                            this.initSound();
+                            this.startGame();
                         }
                     });
+                }
+
+                startGame() {
+                    this.isGameActive = true;
+                    this.lives = 5;
+                    this.score = 0;
+                    this.isBig = false;
+                    this.isInvincible = false;
+                    this.updateHeartsUI();
+                    this.scoreText.setText('SCORE: 0');
+
+                    this.physics.resume();
+                    this.debugText.setText('');
+                    this.initSound();
+
+                    // Respawn logic if needed
+                    this.player.setPosition(100, 100);
+                    this.player.setVelocity(0, 0);
+                    this.enemies.clear(true, true);
+                    this.spawnEnemy(600, 300);
+                    this.spawnEnemy(1200, 300);
+                    this.spawnEnemy(1500, 100);
                 }
 
                 createPlatformRow(start: number, end: number, y: number) {
@@ -440,9 +450,10 @@ export default function MarioGamePage() {
 
                     this.player.setVelocityX(0);
 
-                    const left = this.cursors?.left.isDown || this.vLeft;
-                    const right = this.cursors?.right.isDown || this.vRight;
-                    const jump = (this.cursors?.up.isDown || this.jumpBtn?.isDown || this.vJump);
+                    // Combine Keyboard and External Ref Inputs
+                    const left = this.cursors?.left.isDown || inputRef.current.left;
+                    const right = this.cursors?.right.isDown || inputRef.current.right;
+                    const jump = (this.cursors?.up.isDown || this.jumpBtn?.isDown || inputRef.current.up);
                     const isGrounded = this.player.body?.touching.down;
 
                     if (left) {
@@ -462,38 +473,7 @@ export default function MarioGamePage() {
                         this.finishGame("GAME OVER");
                     }
 
-                    this.debugText.setText(`X: ${Math.floor(this.player.x)}`);
-                }
-
-                createVirtualController() {
-                    const width = this.scale.width;
-                    const height = this.scale.height;
-
-                    const zoneLeft = this.add.zone(0, height / 2, width / 3, height / 2).setOrigin(0).setScrollFactor(0).setInteractive();
-                    zoneLeft.on('pointerdown', () => this.vLeft = true);
-                    zoneLeft.on('pointerup', () => this.vLeft = false);
-                    zoneLeft.on('pointerout', () => this.vLeft = false);
-
-                    const zoneRight = this.add.zone(width / 3, height / 2, width / 3, height / 2).setOrigin(0).setScrollFactor(0).setInteractive();
-                    zoneRight.on('pointerdown', () => this.vRight = true);
-                    zoneRight.on('pointerup', () => this.vRight = false);
-                    zoneRight.on('pointerout', () => this.vRight = false);
-
-                    const zoneJump = this.add.zone(width * 2 / 3, height / 2, width / 3, height / 2).setOrigin(0).setScrollFactor(0).setInteractive();
-                    zoneJump.on('pointerdown', () => this.vJump = true);
-                    zoneJump.on('pointerup', () => this.vJump = false);
-                    zoneJump.on('pointerout', () => this.vJump = false);
-
-                    const gfx = this.add.graphics().setScrollFactor(0);
-                    gfx.fillStyle(0xFFFFFF, 0.1);
-                    gfx.fillRect(10, height - 60, 50, 50);
-                    gfx.fillRect(70, height - 60, 50, 50);
-                    gfx.fillStyle(0xFF0000, 0.2);
-                    gfx.fillCircle(width - 50, height - 35, 30);
-
-                    this.add.text(20, height - 45, '<', { fontSize: '20px' }).setScrollFactor(0);
-                    this.add.text(85, height - 45, '>', { fontSize: '20px' }).setScrollFactor(0);
-                    this.add.text(width - 60, height - 45, 'J', { fontSize: '20px' }).setScrollFactor(0);
+                    this.debugText.setText(`Pos: ${Math.floor(this.player.x)}`);
                 }
             }
 
@@ -534,14 +514,130 @@ export default function MarioGamePage() {
         };
     }, []);
 
+    // Handlers
+    const handleStart = (key: 'left' | 'right' | 'up' | 'down') => {
+        inputRef.current[key] = true;
+    };
+
+    const handleEnd = (key: 'left' | 'right' | 'up' | 'down') => {
+        inputRef.current[key] = false;
+    };
+
+    const preventDefault = (e: React.TouchEvent | React.MouseEvent) => {
+        // Prevent default behavior if needed, e.g. text selection or scrolling
+    };
+
     return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-slate-700">
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-2 select-none touch-none">
+            <h1 className="text-white mb-2 font-bold text-xl">Mario Game (Phaser)</h1>
+
+            {/* Game Container */}
+            <div className="w-full max-w-[640px] aspect-video bg-black rounded-lg overflow-hidden shadow-2xl border border-slate-700 relative">
                 <div
                     ref={gameRef}
                     className="w-full h-full"
                 />
             </div>
+
+            {/* Famicom Controller */}
+            <div className="w-full max-w-[600px] mt-6 relative">
+                {/* Controller Body */}
+                <div className="bg-[#8b0000] rounded-xl p-2 sm:p-4 shadow-[0_10px_0_rgb(60,0,0)] border-b-4 border-[#5d0000] relative">
+
+                    {/* Gold Faceplate */}
+                    <div className="bg-[#bd9f5c] rounded lg:rounded-lg p-4 flex justify-between items-center shadow-inner border border-[#8f7536] relative overflow-hidden">
+                        {/* Brushed metal effect overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-black/10 pointer-events-none"></div>
+
+                        {/* LEFT: D-Pad */}
+                        <div className="relative w-36 h-36 flex-shrink-0">
+                            {/* D-Pad Container */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32">
+                                {/* Up */}
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-11 bg-[#1a1a1a] rounded-t shadow-md z-10 active:bg-black"></div>
+                                {/* Down */}
+                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-11 bg-[#1a1a1a] rounded-b shadow-md z-10 active:bg-black"></div>
+                                {/* Left */}
+                                <button
+                                    className="absolute left-0 top-1/2 -translate-y-1/2 w-11 h-10 bg-[#1a1a1a] rounded-l shadow-md z-20 active:translate-y-[1px] active:bg-[#000]"
+                                    onMouseDown={(e) => { preventDefault(e); handleStart('left'); }}
+                                    onMouseUp={(e) => { preventDefault(e); handleEnd('left'); }}
+                                    onMouseLeave={() => handleEnd('left')}
+                                    onTouchStart={(e) => { handleStart('left'); }}
+                                    onTouchEnd={(e) => { handleEnd('left'); }}
+                                ></button>
+                                {/* Right */}
+                                <button
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-10 bg-[#1a1a1a] rounded-r shadow-md z-20 active:translate-y-[1px] active:bg-[#000]"
+                                    onMouseDown={(e) => { preventDefault(e); handleStart('right'); }}
+                                    onMouseUp={(e) => { preventDefault(e); handleEnd('right'); }}
+                                    onMouseLeave={() => handleEnd('right')}
+                                    onTouchStart={(e) => { handleStart('right'); }}
+                                    onTouchEnd={(e) => { handleEnd('right'); }}
+                                ></button>
+                                {/* Center */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-[#1a1a1a] z-10">
+                                    <div className="w-full h-full rounded-full bg-gradient-to-br from-white/5 to-black/20"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* MIDDLE: Select / Start (Visual Only) */}
+                        <div className="hidden sm:flex gap-4 self-end mb-4 mx-4">
+                            <div className="flex flex-col items-center gap-1">
+                                <div className="w-12 h-4 bg-[#1a1a1a] rounded-full transform -rotate-12 border border-black/50 shadow-[0_1px_0_rgba(255,255,255,0.2)]"></div>
+                                <span className="text-[10px] font-bold text-[#8b0000] uppercase tracking-widest mt-1">Select</span>
+                            </div>
+                            <div className="flex flex-col items-center gap-1">
+                                <div className="w-12 h-4 bg-[#1a1a1a] rounded-full transform -rotate-12 border border-black/50 shadow-[0_1px_0_rgba(255,255,255,0.2)]"></div>
+                                <span className="text-[10px] font-bold text-[#8b0000] uppercase tracking-widest mt-1">Start</span>
+                            </div>
+                        </div>
+
+                        {/* RIGHT: A / B Buttons */}
+                        <div className="flex gap-4 sm:gap-6 pr-2 sm:pr-6 items-end relative top-2">
+                            {/* B Button */}
+                            <div className="flex flex-col items-end group">
+                                <button
+                                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-black shadow-[0_3px_0_rgba(0,0,0,0.5)] active:translate-y-[2px] active:shadow-none border border-gray-800 relative overflow-hidden"
+                                    onMouseDown={(e) => { preventDefault(e); handleStart('up'); }}
+                                    onMouseUp={(e) => { preventDefault(e); handleEnd('up'); }}
+                                    onMouseLeave={() => handleEnd('up')}
+                                    onTouchStart={(e) => { handleStart('up'); }}
+                                    onTouchEnd={(e) => { handleEnd('up'); }}
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full"></div>
+                                </button>
+                                <span className="font-bold text-[#8b0000] mr-2 mt-1">B</span>
+                            </div>
+
+                            {/* A Button */}
+                            <div className="flex flex-col items-end relative -top-4 group">
+                                <button
+                                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-black shadow-[0_3px_0_rgba(0,0,0,0.5)] active:translate-y-[2px] active:shadow-none border border-gray-800 relative overflow-hidden"
+                                    onMouseDown={(e) => { preventDefault(e); handleStart('up'); }}
+                                    onMouseUp={(e) => { preventDefault(e); handleEnd('up'); }}
+                                    onMouseLeave={() => handleEnd('up')}
+                                    onTouchStart={(e) => { handleStart('up'); }}
+                                    onTouchEnd={(e) => { handleEnd('up'); }}
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-full"></div>
+                                </button>
+                                <span className="font-bold text-[#8b0000] mr-2 mt-1">A</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="absolute bottom-2 right-4 text-[#5d0000] text-xs font-bold tracking-widest opacity-50">
+                        NINTENDO FAMILY COMPUTER
+                    </div>
+                </div>
+            </div>
+
+            <p className="text-slate-500 mt-4 text-sm text-center">
+                Controls: Use D-Pad Left/Right to move. A or B to Jump.<br />
+                Tap the game screen to start/focus.
+            </p>
         </div>
     );
 }
