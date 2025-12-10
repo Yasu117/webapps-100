@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MealRecord, UserProfile, MealCategory, RiskLevel } from './types';
 
+
 // --- Constants ---
 const STORAGE_KEY_MEALS = 'app-010-glucose-meals';
 const STORAGE_KEY_PROFILE = 'app-010-glucose-profile';
