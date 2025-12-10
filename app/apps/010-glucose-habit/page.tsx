@@ -612,7 +612,7 @@ export default function GlucoseHabitPage() {
             <div className="max-w-md mx-auto min-h-screen bg-slate-50">
                 {/* Header Area */}
                 <header className="px-5 py-4 bg-white shadow-sm sticky top-0 z-10">
-                    <h1 className="text-lg font-bold text-slate-800">010 血糖値習慣サポート</h1>
+                    <h1 className="text-lg font-bold text-slate-800">010 血糖値スパイク予防習慣サポート</h1>
                 </header>
 
                 {/* Main Content Area */}
