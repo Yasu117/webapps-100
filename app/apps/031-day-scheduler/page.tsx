@@ -92,13 +92,42 @@ export default function DayScheduler() {
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 font-sans">
             <div className="max-w-4xl mx-auto">
-                <div className="mb-6 flex items-center gap-4">
-                    <Link href="/apps" className="text-slate-400 hover:text-white transition">
-                        <ArrowLeft size={24} />
-                    </Link>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                        AI Day Scheduler
-                    </h1>
+                <div className="mb-8">
+                    <div className="flex items-center gap-4 mb-4">
+                        <Link href="/apps" className="text-slate-400 hover:text-white transition">
+                            <ArrowLeft size={24} />
+                        </Link>
+                        <div>
+                            <div className="text-sm font-bold text-emerald-400 mb-1">App 031</div>
+                            <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                                AI Day Scheduler
+                            </h1>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 p-4 rounded-xl text-sm text-slate-300 border border-slate-800">
+                        <h3 className="font-bold text-emerald-400 mb-2 flex items-center gap-2">
+                            <Sparkles size={16} /> このアプリでできること・使い方
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <p className="font-semibold text-slate-200 mb-1">✨ できること</p>
+                                <ul className="list-disc list-inside space-y-1 text-slate-400">
+                                    <li>やりたいことリストから最適な1日のスケジュールを自動生成</li>
+                                    <li>「ゆっくりしたい」「勉強に集中したい」などの抽象的な要望も具体化</li>
+                                    <li>既存の予定を考慮した無理のないプランニング</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p className="font-semibold text-slate-200 mb-1">📝 使い方</p>
+                                <ol className="list-decimal list-inside space-y-1 text-slate-400">
+                                    <li>「今日やりたいこと」を入力（音声入力も可 🎙️）</li>
+                                    <li>会議や移動など「動かせない予定」を入力</li>
+                                    <li>「スケジュールを作成」ボタンをクリック</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
