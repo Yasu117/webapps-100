@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 // --- Constants ---
 const GRID_SIZE = 4;
@@ -312,6 +314,9 @@ export default function Game2048Page() {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
         >
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             {/* Header */}
             <header className="px-5 py-4 flex items-center justify-between bg-slate-800 border-b border-slate-700 shadow-md z-10">
                 <div className="flex items-center gap-3">

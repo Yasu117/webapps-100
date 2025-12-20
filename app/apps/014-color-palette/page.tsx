@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 type Color = {
     hex: string;
@@ -53,6 +55,9 @@ export default function ColorPalettePage() {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-800 pb-20">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             <div className="max-w-md mx-auto bg-white min-h-screen shadow-xl relative flex flex-col">
 
                 {/* Header */}
@@ -84,8 +89,8 @@ export default function ColorPalettePage() {
                                 onClick={handleGenerate}
                                 disabled={isGenerating || !prompt.trim()}
                                 className={`absolute right-1 top-1 bottom-1 px-5 rounded-full font-bold text-xs text-white transition-all ${isGenerating || !prompt.trim()
-                                        ? 'bg-slate-300 cursor-not-allowed'
-                                        : 'bg-pink-500 hover:bg-pink-400 shadow-md'
+                                    ? 'bg-slate-300 cursor-not-allowed'
+                                    : 'bg-pink-500 hover:bg-pink-400 shadow-md'
                                     }`}
                             >
                                 {isGenerating ? '生成中...' : '生成'}

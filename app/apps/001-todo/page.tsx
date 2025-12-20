@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 const STORAGE_KEY = "miniapp-001-todo";
 
@@ -41,6 +43,9 @@ export default function TodoApp() {
 
     return (
         <div className="min-h-screen bg-slate-900 text-white p-6">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             <div className="max-w-md mx-auto space-y-6">
                 <h1 className="text-3xl font-bold text-center">001 シンプルToDo</h1>
 

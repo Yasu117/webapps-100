@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 // --- Constants ---
 const GRID_SIZE = 20;
@@ -252,6 +254,9 @@ export default function NeonSnakePage() {
 
     return (
         <div className="min-h-screen bg-slate-950 font-sans text-slate-100 flex flex-col overflow-hidden">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             {/* Header */}
             <header className="px-4 py-3 flex items-center justify-between border-b border-slate-800 bg-slate-900/50 backdrop-blur">
                 <div>

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 type State = 'idle' | 'waiting' | 'ready' | 'result' | 'early';
 
@@ -104,6 +106,9 @@ export default function ReactionTestPage() {
 
     return (
         <div className="min-h-screen bg-slate-950 font-sans text-slate-100 flex flex-col">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             {/* Header */}
             <header className="px-5 py-4 flex items-center justify-between absolute top-0 w-full z-10 pointer-events-none">
                 <h1 className="text-xl font-bold text-white/50 flex items-center gap-2">

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -133,6 +135,9 @@ export default function PomodoroTimerPage() {
 
     return (
         <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             <div className="w-full max-w-md bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
                 {/* ヘッダー */}
                 <div className="flex items-center justify-between mb-6">

@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { MealRecord, UserProfile, MealCategory, RiskLevel } from './types';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 
 // --- Constants ---
@@ -609,6 +611,9 @@ export default function GlucoseHabitPage() {
 
     return (
         <div className="min-h-screen bg-slate-50 pb-24 font-sans text-slate-800">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             <div className="max-w-md mx-auto min-h-screen bg-slate-50">
                 {/* Header Area */}
                 <header className="px-5 py-4 bg-white shadow-sm sticky top-0 z-10">

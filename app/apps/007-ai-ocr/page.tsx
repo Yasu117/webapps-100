@@ -10,6 +10,8 @@ import { CheckCircle2, AlertCircle } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 import { analyzeImage, checkEnvVars } from './actions';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 
 
@@ -138,6 +140,9 @@ export default function Page() {
 
     return (
         <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             <div className="max-w-4xl mx-auto space-y-8">
 
                 {/* Header */}

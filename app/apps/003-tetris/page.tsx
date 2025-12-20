@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 const COLS = 10;
 const ROWS = 20;
@@ -465,6 +467,9 @@ export default function TetrisPage() {
 
     return (
         <div className="h-[100dvh] w-full bg-slate-950 flex flex-col items-center overflow-hidden touch-none select-none">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
 
             {/* Header: Score & Status */}
             <div className="w-full max-w-md px-6 pt-4 pb-2 flex flex-col gap-2 shrink-0">

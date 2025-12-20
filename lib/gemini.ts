@@ -31,3 +31,12 @@ export const getLegalModel = () => {
     // 契約書チェック用も同じモデルを使用
     return client.getGenerativeModel({ model: "gemini-flash-latest" });
 };
+
+export const getSchedulerModel = () => {
+    const client = getGeminiClient();
+    if (!client) {
+        return null;
+    }
+    return client.getGenerativeModel({ model: "gemini-flash-latest" });
+};
+

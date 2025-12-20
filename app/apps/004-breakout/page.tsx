@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 const CANVAS_WIDTH = 480;
 const CANVAS_HEIGHT = 320;
@@ -249,6 +251,9 @@ export default function BreakoutPage() {
 
     return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 py-8">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             <div className="w-full max-w-3xl flex flex-col md:flex-row gap-6">
                 <div className="flex-1 bg-slate-950 border border-slate-700 rounded-2xl shadow-xl p-4 flex items-center justify-center">
                     <canvas

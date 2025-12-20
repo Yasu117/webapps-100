@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 // --- Types ---
 type Technique = {
@@ -175,6 +177,9 @@ export default function ZenBreathPage() {
 
     return (
         <div className="min-h-screen bg-slate-950 font-sans text-slate-100 flex flex-col items-center justify-between pb-10">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             {/* Header */}
             <header className="px-5 py-6 w-full flex items-center justify-between">
                 <div>

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { QRCodeCanvas } from 'qrcode.react';
 
 export default function QRGeneratorPage() {
@@ -25,6 +27,9 @@ export default function QRGeneratorPage() {
 
     return (
         <div className="min-h-screen bg-slate-950 font-sans text-slate-100 pb-10 flex flex-col items-center">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
             {/* Header */}
             <header className="px-5 py-6 w-full flex items-center justify-between bg-slate-900 border-b border-slate-800 sticky top-0 z-10">
                 <h1 className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center gap-2">

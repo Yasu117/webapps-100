@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 // --- Types ---
 type Mora = string[]; // e.g., ['tsu', 'tu']
@@ -243,6 +245,9 @@ export default function TypingRacerPage() {
 
     return (
         <div className="min-h-screen bg-slate-900 font-sans text-white overflow-hidden relative flex flex-col">
+            <Link href="/apps" className="fixed top-4 left-4 z-50 p-3 bg-slate-900/90 text-slate-100 rounded-full hover:bg-slate-800 transition-all shadow-lg border border-slate-700/50 backdrop-blur-md group">
+                <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            </Link>
 
             {/* Dynamic Background */}
             <div className="absolute inset-0 opacity-20 pointer-events-none">
