@@ -16,17 +16,7 @@ type Puzzle = {
 const PUZZLES: Puzzle[] = [
     {
         id: 1,
-        rows: ["H.RE", "S.ME"], // HE, ME (example) - wait regex applies to the whole row string?
-        // Let's do standard Regex Crossword style: ".*" matches the row string?
-        // Grid 2x2:
-        // [A][B]
-        // [C][D]
-        // Row 1: ^He$ -> H, e
-        // Row 2: ^go$ -> g, o
-        // Col 1: ^Hg$
-        // Col 2: ^eo$
-
-        rows: ["HE", "GO"], // Regexes
+        rows: ["HE", "GO"],
         cols: ["HG", "EO"],
         solution: [["H", "E"], ["G", "O"]]
     },

@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, Atom, HelpCircle, AlertCircle, Loader2, CheckCircle, XCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, Atom, HelpCircle, AlertCircle, Loader2, CheckCircle, XCircle, RefreshCw, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 type Question = {

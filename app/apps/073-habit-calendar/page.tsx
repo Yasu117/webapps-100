@@ -150,7 +150,7 @@ function calculateStreak(dates: string[]): number {
     for (let i = 0; i < dates.length; i++) {
         if (current && sorted.includes(current)) {
             streak++;
-            const d = new Date(current);
+            const d: Date = new Date(current);
             d.setDate(d.getDate() - 1);
             current = d.toISOString().split('T')[0];
         } else {

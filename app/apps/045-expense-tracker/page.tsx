@@ -100,7 +100,7 @@ export default function ExpenseTracker() {
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
-                                    data={chartData}
+                                    data={chartData as any[]}
                                     cx="50%"
                                     cy="50%"
                                     innerRadius={60}
